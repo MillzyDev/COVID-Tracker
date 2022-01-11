@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Coronavirus Tracker UK</title>
+        <link rel="stylesheet" href="css/index.css"/>
+    </head>
+    <body>
+        <h1>SARS-CoV2 Cases in the UK</h1>
+        <p>This tracker links coronavirus cases and the news to see how real world events effect the spead of the pathogen.</p>
+        <div class="graph">
+            <canvas id="covidChart" style="width: 100%;"></canvas>
+        </div>
+        <div></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+            <script type="text/javascript">
+                const data = <%-JSON.stringify(covidData)%>;
+
+                let xValues = [];
+                let caseValues = [];
+                let deathValues = [];
+
+                data.data.reverse().forEach(element => {
+                    xValues.push(element.date);
+                    caseValues.push(element.newCases);
+                    deathValues.push(element.newDeaths);
+                });
+
+                new Chart("covidChart", {
+                    type: "line",
+                    data: {
+                        labels: xValues,
+                        datasets: [{
+                            label: "Daily Cases",
+                            fill: false,
+                            lineTension: 0,
+                            data: caseValues,
+                            borderColor: "#04aa6d"
+                        },
+                        {
+                            label: "Daily Deaths",
+                            fill: false,
+                            lineTension: 0,
+                            data: deathValues,
+                            borderColor: "black"
+                        }]
+                    },
+                    options: {
+                        parsing: {
+                            xAxisKey: "date",
+                            yAxisKey: "cases"
+                        },
+                        scales: {
+                            xAxes: {
+                                type: "time",
+                                time: {
+                                    displayFormats: {
+                                        quarter: "MMM YYYY"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+            </script>
+    </body>
+    <footer>
+        <p>Coronavirus data was provided by <a href="https://coronavirus.data.gov.uk/">GOV.UK</a></p>
+        <p>This is an Open Source project, <a href="https://github.com/MillzyDev/COVID-Tracker">Contribute Now!</a></p>
+    </footer>
+</html>
